@@ -23,14 +23,17 @@ public class Usuario {
     private Boolean activo;
     private LocalDateTime fechaCreacion;
 
-/** Obtener nombre completo del usuario*/
 
-public String getNombreUsuario() {
-    if(nombre != null) {
-        return nombre;
+    public Usuario(UUID idUsuario, String username, String passwordHash,
+                   Rol rol, Boolean activo, LocalDateTime fechaCreacion) {
+        this.idUsuario = idUsuario;
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.rol = rol;
+        this.activo = activo;
+        this.fechaCreacion = fechaCreacion;
     }
-    return username;
-}
+
     /** Verifica si el usuario está activo */
 public boolean Activo() {
     return Boolean.TRUE.equals(this.activo);
