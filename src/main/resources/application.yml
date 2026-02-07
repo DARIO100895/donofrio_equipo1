@@ -4,9 +4,9 @@ spring:
 
   #Config postgreSQL
   datasource:
-    url: jdbc:postgresql://localhost:5432/CompraVenta
+    url: jdbc:postgresql://localhost:5432/Logistica2
     username: postgres
-    password: 1234
+    password: pos123
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -26,16 +26,10 @@ spring:
             non_contextual_creation: true
     open-in-view: false
 
-server:
-  port: 8080
 
-
-
-
-jwt:
-  secret: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzA0MTk3NzEsImV4cCI6MTc3MTAyNDU3MSwianRpIjoiMzhjNThjN2UtMDM1Ny00NGYxLWJkNDgtM2IyNDZlN2IxNWUzIiwiaXNzIjoiYXBpLmV4YW1wbGUuY29tIiwic3ViIjoidXNlcl83MjM2IiwiYXVkIjoiaHR0cHM6Ly9leGFtcGxlLmNvbSJ9.E71cAhlnILALEd58EyQVUq7TiUfmu5BzrKZkRQcD91I
-
-
-
+  server:
+    port: 8080
+    servlet:
+      context-path: /api/v1
 
 

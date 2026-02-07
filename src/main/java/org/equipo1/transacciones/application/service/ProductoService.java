@@ -18,10 +18,9 @@ public class ProductoService implements ProductoUseCase {
     }
 
     @Override
-    public Producto crearProducto(UUID sku, String nombre, String presentacion, String categoria, Integer cantidadPorCaja, Double precio) {
+    public Producto crearProducto( String nombre, String presentacion, String categoria, Integer cantidadPorCaja, Double precio) {
 
         Producto producto = Producto.builder()
-                .sku(sku)
                 .nombre(nombre)
                 .presentacion(presentacion)
                 .categoria(categoria)

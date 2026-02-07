@@ -22,7 +22,6 @@ public class ProductoController {
     public ProductoResponse crear(@RequestBody ProductoRequest request) {
 
         Producto producto = productoUseCase.crearProducto(
-                request.getSku(),
                 request.getNombre(),
                 request.getPresentacion(),
                 request.getCategoria(),

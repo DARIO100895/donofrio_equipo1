@@ -7,7 +7,6 @@ import java.util.UUID;
 @Data
 public class ProductoRequest {
 
-    private UUID sku;
     private String nombre;
     private String presentacion;
     private String categoria;

@@ -7,7 +7,6 @@ import java.util.UUID;
 public interface ProductoUseCase {
 
     Producto crearProducto(
-            UUID sku,
             String nombre,
             String presentacion,
             String categoria,
