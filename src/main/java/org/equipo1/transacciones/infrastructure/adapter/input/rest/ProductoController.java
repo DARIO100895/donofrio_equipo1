@@ -1,58 +1,43 @@
 package org.equipo1.transacciones.infrastructure.adapter.input.rest;
 
+import lombok.RequiredArgsConstructor;
 import org.equipo1.transacciones.application.ports.in.ProductoUseCase;
+import org.equipo1.transacciones.application.ports.out.CategoriaRepository;
 import org.equipo1.transacciones.domain.model.Producto;
 import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.request.ProductoRequest;
 import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.response.ProductoResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/productos")
 public class ProductoController {
 
     private final ProductoUseCase productoUseCase;
 
-    public ProductoController(ProductoUseCase productoUseCase) {
-        this.productoUseCase = productoUseCase;
-    }
 
     @PostMapping
-    public ProductoResponse crear(@RequestBody ProductoRequest request) {
-
-        Producto producto = productoUseCase.crearProducto(
-                request.getNombre(),
-                request.getPresentacion(),
-                request.getCategoria(),
-                request.getCantidadPorCaja(),
-                request.getPrecio()
-        );
-
-        return toResponse(producto);
+    public ResponseEntity<ProductoResponse> crear(@RequestBody ProductoRequest request) {
+        ProductoResponse response = productoUseCase.crearProducto(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
     @GetMapping("/{sku}")
-    public ProductoResponse obtener(@PathVariable UUID sku) {
-        return toResponse(productoUseCase.obtenerProducto(sku));
+    public ResponseEntity<ProductoResponse> obtener(@PathVariable UUID sku) {
+        ProductoResponse response = productoUseCase.obtenerProducto(sku);
+        return ResponseEntity.ok(response);
     }
+
 
     @DeleteMapping("/{sku}")
-    public void desactivar(@PathVariable UUID sku) {
+    public ResponseEntity<Void> desactivar(@PathVariable UUID sku) {
         productoUseCase.desactivarProducto(sku);
-    }
-
-    private ProductoResponse toResponse(Producto producto) {
-        return ProductoResponse.builder()
-                .sku(producto.getSku())
-                .nombre(producto.getNombre())
-                .presentacion(producto.getPresentacion())
-                .categoria(producto.getCategoria())
-                .cantidadPorCaja(producto.getCantidadPorCaja())
-                .precio(producto.getPrecio())
-                .activo(producto.getActivo())
-                .fechaCreacion(producto.getFechaCreacion())
-                .fechaActualizacion(producto.getFechaActualizacion())
-                .build();
+        return ResponseEntity.noContent().build();
     }
 }

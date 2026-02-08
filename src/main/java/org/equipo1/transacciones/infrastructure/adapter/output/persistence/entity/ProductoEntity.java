@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -18,24 +20,27 @@ import java.util.UUID;
 public class ProductoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "sku", nullable = false, updatable = false)
+    @Column(name = "sku", columnDefinition = "uuid")
     private UUID sku;
 
-    @Column(name = "nombre", length = 100, nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private CategoriaEntity categoria;
+
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
     @Column(name = "presentacion", length = 50)
     private String presentacion;
 
-    @Column(name = "categoria", length = 50)
-    private String categoria;
-
     @Column(name = "cantidad_por_caja")
     private Integer cantidadPorCaja;
 
-    @Column(name = "precio")
-    private Double precio;
+    @Column(name = "tipo_empaque", length = 50)
+    private String tipoEmpaque;
+
+    @Column(name = "precio_unitario", precision = 10, scale = 2, nullable = false)
+    private BigDecimal precioUnitario = BigDecimal.ZERO;
 
     @Column(name = "activo")
     private Boolean activo = true;
@@ -45,6 +50,19 @@ public class ProductoEntity {
 
     @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+    private List<PrecioCompraProductoEntity> preciosCompra;
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+    private List<PrecioVentaProductoEntity> preciosVenta;
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+    private List<CompraDetalleEntity> comprasDetalle;
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+    private List<VentaDetalleEntity> ventasDetalle;
+
 
     @PrePersist
     protected void onCreate() {

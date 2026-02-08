@@ -43,7 +43,7 @@ public class CompraEntity {
     @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
 
-    @OneToMany(mappedBy = "compra", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "compra", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CompraDetalleEntity> detalles;
 
 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -19,11 +20,15 @@ public class CompraDetalle {
     private String numeroLote;
     private LocalDate fechaVencimiento;
     private Integer cantidad;
-    private Double costoUnitario;
-    private Double subtotal;
+    private BigDecimal costoUnitario;
+    private BigDecimal subtotal;
 
-    public double calcularSubtotal() {
-        return (cantidad != null && costoUnitario != null) ? cantidad * costoUnitario : 0.0;
+    public BigDecimal calcularSubtotal() {
+        if (cantidad != null && costoUnitario != null) {
+            return costoUnitario.multiply(BigDecimal.valueOf(cantidad));
+        } else {
+            return BigDecimal.ZERO;
+        }
     }
 
     public void actualizarSubtotal() {

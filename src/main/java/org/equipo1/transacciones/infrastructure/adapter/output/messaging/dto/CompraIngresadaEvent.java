@@ -1,5 +1,4 @@
-package org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.response;
-
+package org.equipo1.transacciones.infrastructure.adapter.output.messaging.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,15 +10,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CompraResponse {
+public class CompraIngresadaEvent {
 
     private Integer idCompra;
     private LocalDate fechaCompra;
     private String proveedor;
     private BigDecimal total;
     private String estado;
-    private List<CompraDetalleResponse> detalles;
+    private List<CompraDetalleEvent> detalles;
 }

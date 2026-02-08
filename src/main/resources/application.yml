@@ -9,9 +9,9 @@ spring:
 
   #Config postgreSQL
   datasource:
-    url: jdbc:postgresql://localhost:5432/bd_compra
+    url: jdbc:postgresql://localhost:5432/CompraVentaBase
     username: postgres
-    password: 1234
+    password: pos123
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -20,7 +20,7 @@ spring:
   #Jpa
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:

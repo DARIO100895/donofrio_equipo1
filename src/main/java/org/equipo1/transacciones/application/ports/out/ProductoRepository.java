@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface ProductoRepository {
 
-    void guardar(Producto producto);
+    Producto guardar(Producto producto);
 
     Optional<Producto> buscarPorSku(UUID sku);
 }
