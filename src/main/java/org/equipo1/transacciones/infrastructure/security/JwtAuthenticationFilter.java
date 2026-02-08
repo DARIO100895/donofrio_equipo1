@@ -7,8 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.equipo1.transacciones.application.ports.in.ValidateTokenUseCase;
-import org.equipo1.transacciones.domain.model.Usuario;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,44 +19,50 @@ import java.util.Collections;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final ValidateTokenUseCase validateTokenUseCase;
-    private final JwtTokenValidator jwtTokenValidator;
-
-    public JwtAuthenticationFilter(ValidateTokenUseCase validateTokenUseCase,
-                                   JwtTokenValidator jwtTokenValidator) {
-        this.validateTokenUseCase = validateTokenUseCase;
-        this.jwtTokenValidator = jwtTokenValidator;
-    }
+    private final JwtService jwtService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            try {
-                Usuario usuario = validateTokenUseCase.validateAndGetUser(token);
-                String role = jwtTokenValidator.getRoleFromToken(token);
+        try {
+            final String jwt = authHeader.substring(7);
+            final String username = jwtService.extractUsername(jwt);
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                usuario.getUsername(),
-                                null,
-                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
-                        );
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (jwtService.isTokenValid(jwt, username)) {
+                    String rol = jwtService.extractClaim(jwt, claims -> claims.get("rol", String.class));
 
-            } catch (Exception e) {
-                logger.error("Error validando token: " + e.getMessage());
+                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + rol);
+
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            username,
+                            null,
+                            Collections.singletonList(authority)
+                    );
+
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    log.debug("Usuario autenticado: {} con rol: {}", username, rol);
+                }
             }
+        } catch (Exception e) {
+            log.error("Error al procesar JWT: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

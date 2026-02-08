@@ -26,6 +26,7 @@ public class Usuario {
 
     public Usuario(UUID idUsuario, String username, String passwordHash,
                    Rol rol, Boolean activo, LocalDateTime fechaCreacion) {
+
         this.idUsuario = idUsuario;
         this.username = username;
         this.passwordHash = passwordHash;
@@ -35,9 +36,8 @@ public class Usuario {
     }
 
     /** Verifica si el usuario está activo */
-public boolean Activo() {
-    return Boolean.TRUE.equals(this.activo);
-}
-
+    public boolean Activo() {
+        return Boolean.TRUE.equals(this.activo);
+    }
 
 }

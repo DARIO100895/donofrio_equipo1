@@ -11,12 +11,4 @@ public class Rol {
     private Integer idRol;
     private String nombreRol;
 
-    public Integer getIdRol() {
-        return idRol;
-    }
-
-    public String getNombreRol() {
-        return nombreRol;
-    }
-
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -21,33 +22,37 @@ public class CompraDetalleEntity {
     @Column(name = "id_detalle")
     private Integer idDetalle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_compra", nullable = false)
     private CompraEntity compra;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sku", nullable = false)
     private ProductoEntity producto;
 
-    @Column(name = "numero_lote", length = 20)
+    @Column(name = "numero_lote", nullable = false, length = 20)
     private String numeroLote;
 
-    @Column(name = "fecha_vencimiento")
+    @Column(name = "fecha_vencimiento", nullable = false)
     private LocalDate fechaVencimiento;
 
-    @Column(name = "cantidad")
+    @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
 
-    @Column(name = "costo_unitario")
-    private Double costoUnitario;
+    @Column(name = "costo_unitario", precision = 10, scale = 4, nullable = false)
+    private BigDecimal costoUnitario;
 
-    @Column(name = "subtotal")
-    private Double subtotal;
+    @Column(name = "subtotal", precision = 12, scale = 2)
+    private BigDecimal subtotal;
 
     @PrePersist
     @PreUpdate
     protected void calcularSubtotal() {
-        subtotal = (cantidad != null && costoUnitario != null) ? cantidad * costoUnitario : 0.0;
+        if (cantidad != null && costoUnitario != null) {
+            subtotal = costoUnitario.multiply(BigDecimal.valueOf(cantidad));
+        } else {
+            subtotal = BigDecimal.ZERO;
+        }
     }
 
 

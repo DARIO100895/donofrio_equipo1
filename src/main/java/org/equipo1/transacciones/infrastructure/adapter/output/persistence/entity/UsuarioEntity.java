@@ -18,8 +18,7 @@ import java.util.UUID;
 public class UsuarioEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario", columnDefinition = "UUID")
+    @Column(name = "id_usuario", columnDefinition = "UUID", updatable = false)
     private UUID idUsuario;
 
     @Column(name = "username", unique = true, nullable = false, length = 50)

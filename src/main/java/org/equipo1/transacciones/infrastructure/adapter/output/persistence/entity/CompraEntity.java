@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -24,17 +25,17 @@ public class CompraEntity {
     @Column(name = "id_compra")
     private Integer idCompra;
 
-    @Column(name = "fecha_compra")
+    @Column(name = "fecha_compra", nullable = false)
     private LocalDate fechaCompra;
 
     @Column(name = "proveedor", length = 100)
-    private String proveedor;
+    private String proveedor = "D’Onofrio";
 
-    @Column(name = "total")
-    private Double total;
+    @Column(name = "total", precision = 12, scale = 2)
+    private BigDecimal total;
 
-    @Column(name = "estado", length = 50)
-    private String estado;
+    @Column(name = "estado", length = 20)
+    private String estado = "REGISTRADA";
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
@@ -42,7 +43,7 @@ public class CompraEntity {
     @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
 
-    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "compra", fetch = FetchType.LAZY)
     private List<CompraDetalleEntity> detalles;
 
 
@@ -62,13 +63,14 @@ public class CompraEntity {
 
     public void actualizarTotal() {
         if (detalles != null) {
-
             total = detalles.stream()
-                    .mapToDouble(d -> d.getSubtotal() != null ? d.getSubtotal() : 0.0)
-                    .sum();
+                    .map(d -> d.getSubtotal() != null ? d.getSubtotal() : BigDecimal.ZERO)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
         } else {
-            total = 0.0;
+            total = BigDecimal.ZERO;
         }
     }
 
 }
+
+
