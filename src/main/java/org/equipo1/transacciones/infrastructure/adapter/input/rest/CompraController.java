@@ -2,8 +2,8 @@ package org.equipo1.transacciones.infrastructure.adapter.input.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.equipo1.transacciones.application.service.CompraService;
-import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.request.CompraRequest;
-import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.response.CompraResponse;
+import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.request.CompraRequestDto;
+import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.response.CompraResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +17,16 @@ public class CompraController {
 
 
     @PostMapping
-    public ResponseEntity<CompraResponse> registrarCompra(@RequestBody CompraRequest request) {
+    public ResponseEntity<CompraResponseDto> registrarCompra(@RequestBody CompraRequestDto request) {
 
-        CompraResponse response = compraService.registrarCompra(request);
+        CompraResponseDto response = compraService.registrarCompra(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 
     @PostMapping("/{id}/publicar")
-    public ResponseEntity<CompraResponse> publicarCompra(@PathVariable Integer id) {
-        CompraResponse response = compraService.publicarCompra(id);
+    public ResponseEntity<CompraResponseDto> publicarCompra(@PathVariable Integer id) {
+        CompraResponseDto response = compraService.publicarCompra(id);
         return ResponseEntity.ok(response);
     }
 }

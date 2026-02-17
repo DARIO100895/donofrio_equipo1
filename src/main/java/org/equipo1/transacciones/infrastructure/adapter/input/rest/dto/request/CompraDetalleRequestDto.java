@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CompraDetalleRequest {
+public class CompraDetalleRequestDto {
 
     private UUID sku;
     private String numeroLote;

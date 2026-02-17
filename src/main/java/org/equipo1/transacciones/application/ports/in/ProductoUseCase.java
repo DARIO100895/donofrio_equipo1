@@ -1,19 +1,21 @@
 package org.equipo1.transacciones.application.ports.in;
 
-import org.equipo1.transacciones.domain.model.Producto;
-import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.request.ProductoRequest;
-import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.response.ProductoResponse;
+import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.request.ProductoRequestDto;
+import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.response.ProductoLotesResponseDto;
+import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.response.ProductoResponseDto;
+import org.equipo1.transacciones.infrastructure.adapter.input.rest.dto.response.StockResponseDto;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface ProductoUseCase {
 
-    ProductoResponse crearProducto(ProductoRequest request);
+    ProductoResponseDto crearProducto(ProductoRequestDto request);
 
+    ProductoResponseDto obtenerProducto(UUID sku);
 
-    ProductoResponse obtenerProducto(UUID sku);
+    StockResponseDto obtenerStockProducto(UUID sku);
 
+    ProductoLotesResponseDto obtenerLotesProducto(UUID sku);
 
     void desactivarProducto(UUID sku);
 }

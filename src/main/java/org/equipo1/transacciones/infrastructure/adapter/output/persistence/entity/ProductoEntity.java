@@ -52,12 +52,6 @@ public class ProductoEntity {
     private LocalDateTime fechaActualizacion;
 
     @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
-    private List<PrecioCompraProductoEntity> preciosCompra;
-
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
-    private List<PrecioVentaProductoEntity> preciosVenta;
-
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
     private List<CompraDetalleEntity> comprasDetalle;
 
     @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)

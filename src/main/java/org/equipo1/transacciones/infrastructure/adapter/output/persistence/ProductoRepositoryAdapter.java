@@ -20,17 +20,34 @@ public class ProductoRepositoryAdapter implements ProductoRepository {
 
     private final ProductoJpaRepository productojpaRepository;
     private final CategoriaJpaRepository categoriaJpaRepository;
+    private final ProductoJpaRepository productoJpaRepository;
 
 
     @Override
     public Producto guardar(Producto producto) {
         CategoriaEntity categoriaEntity = categoriaJpaRepository.findById(producto.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-        ProductoEntity entity = ProductoMapper.toEntity(producto, categoriaEntity);
 
-        ProductoEntity savedEntity = productojpaRepository.save(entity);
+        ProductoEntity productoExistente = productoJpaRepository.findById(producto.getSku()).orElse(null);
 
-        return ProductoMapper.toDomain(savedEntity);
+        if(productoExistente != null) {
+            productoExistente.setNombre(producto.getNombre());
+            productoExistente.setPresentacion(producto.getPresentacion());
+            productoExistente.setCategoria(categoriaEntity);
+            productoExistente.setCantidadPorCaja(producto.getCantidadPorCaja());
+            productoExistente.setTipoEmpaque(producto.getTipoEmpaque());
+            productoExistente.setPrecioUnitario(producto.getPrecio());
+            productoExistente.setActivo(producto.getActivo());
+            productoExistente.setFechaActualizacion(producto.getFechaActualizacion());
+
+            ProductoEntity savedEntity = productoJpaRepository.save(productoExistente);
+            return ProductoMapper.toDomain(savedEntity);
+        } else {
+            ProductoEntity newEntity = ProductoMapper.toEntity(producto, categoriaEntity);
+            ProductoEntity savedEntity = productoJpaRepository.save(newEntity);
+            return ProductoMapper.toDomain(savedEntity);
+
+        }
     }
 
     @Override
